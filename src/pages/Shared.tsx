@@ -8,7 +8,7 @@ import ManilaFolder from "@/components/ManilaFolder";
 import VerdictPanel from "@/components/VerdictPanel";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import detectiveBg from "@/assets/detective-bg.jpg";
+import cryptoBg from "@/assets/crypto-bg.jpg";
 
 const Shared = () => {
   const { shareableId } = useParams<{ shareableId: string }>();
@@ -47,7 +47,7 @@ const Shared = () => {
       <div 
         className="min-h-screen relative overflow-x-hidden flex items-center justify-center"
         style={{
-          backgroundImage: `url(${detectiveBg})`,
+          backgroundImage: `url(${cryptoBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
@@ -66,7 +66,7 @@ const Shared = () => {
       <div 
         className="min-h-screen relative overflow-x-hidden"
         style={{
-          backgroundImage: `url(${detectiveBg})`,
+          backgroundImage: `url(${cryptoBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
@@ -94,7 +94,7 @@ const Shared = () => {
     <div 
       className="min-h-screen relative overflow-x-hidden"
       style={{
-        backgroundImage: `url(${detectiveBg})`,
+        backgroundImage: `url(${cryptoBg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -119,7 +119,7 @@ const Shared = () => {
             Home
           </Button>
           <div className="animate-flicker">
-            <TitleBanner title="Shared Investigation" />
+            <TitleBanner title="Shared Analysis" />
           </div>
           <div className="w-24" />
         </header>
@@ -148,7 +148,7 @@ const Shared = () => {
           <div className="lg:col-span-1 min-h-[400px]">
             <div className="bg-secondary/80 backdrop-blur-sm rounded-sm border border-border p-4 min-h-full">
               <h3 className="font-typewriter text-sm uppercase tracking-wider text-primary mb-4 border-b border-primary/30 pb-2">
-                Shared Investigation
+                Shared Analysis
               </h3>
               <div className="space-y-4">
                 <div>
@@ -171,7 +171,7 @@ const Shared = () => {
                 )}
                 <div className="pt-4 border-t border-border/50">
                   <p className="font-typewriter text-xs text-muted-foreground mb-2">
-                    This is a shared investigation. You can view and comment on findings.
+                    This is a shared crypto analysis. You can view and comment on findings.
                   </p>
                 </div>
               </div>

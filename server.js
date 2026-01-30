@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
 dotenv.config();
 
@@ -90,16 +91,22 @@ async function searchTavily(query) {
 }
 
 /**
- * Brain: Analyze results with MiniMax AI
+ * Brain: Analyze results with Gemini AI
  */
-async function analyzeWithMiniMax(target, searchResults) {
-  const apiKey = process.env.MINIMAX_API_KEY;
+async function analyzeWithGemini(target, searchResults) {
+  const apiKey = process.env.GEMINI_API_KEY;
   
   if (!apiKey) {
-    throw new Error('MINIMAX_API_KEY is not set in environment variables');
+    throw new Error('GEMINI_API_KEY is not set in environment variables');
   }
 
   try {
+    const genAI = new GoogleGenerativeAI(apiKey);
+    
+    // Use available models with correct naming (models/ prefix required)
+    const model = genAI.getGenerativeModel({ model: 'models/gemini-2.5-flash' });
+    console.log('Using model: models/gemini-2.5-flash');
+
     // Aggregate search results into text
     const aggregatedResults = searchResults
       .map((result, index) => {
@@ -127,86 +134,9 @@ Return ONLY a valid JSON object (no markdown, no code blocks, no explanations) w
 
 Be harsh but fair. If you find serious red flags (rug pulls, scams, hacks, security issues), score low. If it's clean and legitimate, score high.`;
 
-    // Call MiniMax API
-    // MiniMax uses Authorization header with the API key directly (no Bearer prefix)
-    const response = await fetch('https://api.minimax.chat/v1/text/chatcompletion_pro?GroupId=default', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': apiKey  // MiniMax uses API key directly, not Bearer token
-      },
-      body: JSON.stringify({
-        model: 'abab6.5s-chat',
-        messages: [
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        temperature: 0.7,
-        top_p: 0.95,
-        stream: false,
-        // MiniMax might require additional parameters
-        // tokens_to_generate: 2000
-      })
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('MiniMax API error response:', errorText);
-      console.error('Response status:', response.status);
-      console.error('Response headers:', Object.fromEntries(response.headers.entries()));
-      
-      let errorMessage = `MiniMax API error: ${response.status}`;
-      
-      // Try to parse error response as JSON
-      try {
-        const errorData = JSON.parse(errorText);
-        console.error('Parsed error data:', JSON.stringify(errorData, null, 2));
-        
-        if (errorData.base_resp && errorData.base_resp.status_msg) {
-          errorMessage = `MiniMax API error: ${errorData.base_resp.status_msg} (code: ${errorData.base_resp.status_code})`;
-        } else if (errorData.error) {
-          errorMessage = `MiniMax API error: ${errorData.error}`;
-        } else if (errorData.message) {
-          errorMessage = `MiniMax API error: ${errorData.message}`;
-        } else {
-          errorMessage = `MiniMax API error: ${errorText}`;
-        }
-      } catch (e) {
-        errorMessage = `MiniMax API error: ${errorText}`;
-      }
-      
-      throw new Error(errorMessage);
-    }
-
-    const data = await response.json();
-    
-    // Check for errors in the response body (MiniMax sometimes returns 200 with error in base_resp)
-    if (data.base_resp && data.base_resp.status_code !== 0) {
-      throw new Error(`MiniMax API error: ${data.base_resp.status_msg || 'Unknown error'}`);
-    }
-    
-    // Extract text from MiniMax response (handle multiple possible response formats)
-    let text = '';
-    
-    // Try different response formats
-    if (data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content) {
-      text = data.choices[0].message.content;
-    } else if (data.choices && data.choices[0] && data.choices[0].text) {
-      text = data.choices[0].text;
-    } else if (data.reply) {
-      text = data.reply;
-    } else if (data.text) {
-      text = data.text;
-    } else if (data.base_resp && data.base_resp.status_code === 0 && data.reply) {
-      text = data.reply;
-    } else if (data.base_resp && data.base_resp.status_code !== 0) {
-      throw new Error(`MiniMax API error: ${data.base_resp.status_msg || 'Unknown error'}`);
-    } else {
-      console.error('Unexpected MiniMax API response format:', JSON.stringify(data, null, 2));
-      throw new Error('Unexpected MiniMax API response format');
-    }
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const text = response.text();
     
     // Extract JSON from response (strip markdown if present)
     let jsonText = text.trim();
@@ -230,15 +160,15 @@ Be harsh but fair. If you find serious red flags (rug pulls, scams, hacks, secur
     };
     
   } catch (error) {
-    console.error('MiniMax analysis error:', error);
+    console.error('Gemini analysis error:', error);
     
     // Provide more specific error information
     let errorMessage = 'Investigation encountered an error. Results are inconclusive.';
     if (error.message) {
       if (error.message.includes('404') || error.message.includes('not found')) {
-        errorMessage = `AI model not found. Error: ${error.message}. Please verify your MINIMAX_API_KEY is correct.`;
+        errorMessage = `AI model not found. The model name may be incorrect or your API key may not have access. Error: ${error.message}. Please verify your GEMINI_API_KEY has access to Gemini models.`;
       } else if (error.message.includes('API key') || error.message.includes('authentication') || error.message.includes('401') || error.message.includes('403')) {
-        errorMessage = 'API authentication failed. Please check your MINIMAX_API_KEY in the .env file.';
+        errorMessage = 'API authentication failed. Please check your GEMINI_API_KEY in the .env file.';
       } else if (error.message.includes('quota') || error.message.includes('limit') || error.message.includes('429')) {
         errorMessage = 'API quota exceeded. Please try again later.';
       } else {
@@ -368,12 +298,12 @@ app.post('/api/investigate', async (req, res) => {
 
     logs.push(`[EXECUTE] Total results collected: ${searchResults.reduce((sum, r) => sum + r.data.length, 0)}`);
 
-    // STEP 3: BRAIN - Analyze with MiniMax
-    logs.push('[ANALYZE] Processing results with MiniMax AI...');
+    // STEP 3: BRAIN - Analyze with Gemini
+    logs.push('[ANALYZE] Processing results with Gemini AI...');
     
     let report;
     try {
-      report = await analyzeWithMiniMax(targetName, searchResults);
+      report = await analyzeWithGemini(targetName, searchResults);
       logs.push(`[ANALYZE] Legitimacy score: ${report.score}%`);
       logs.push(`[ANALYZE] Red flags identified: ${report.flags.length}`);
       logs.push(`[COMPLETE] Investigation finished. Verdict: ${report.verdict}`);

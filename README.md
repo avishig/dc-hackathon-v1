@@ -29,7 +29,7 @@ A cryptocurrency investigation platform that analyzes crypto projects for legiti
 ### Backend
 - **Node.js** + **Express** (API server)
 - **Tavily API** (web scraping/search)
-- **MiniMax AI** (analysis and scoring)
+- **Google Gemini AI** (analysis and scoring)
 - **CORS** (cross-origin support)
 - **dotenv** (environment variables)
 
@@ -57,7 +57,7 @@ npm install
 3. Create a `.env` file in the root directory:
 ```env
 TAVILY_API_KEY=your_tavily_api_key_here
-MINIMAX_API_KEY=your_minimax_api_key_here
+GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
 ## Development
@@ -186,7 +186,7 @@ npm run lint
    - Security audit/vulnerability searches
    - Exchange hack/exploit searches
 3. **Eyes**: Executes searches in parallel using Tavily API
-4. **Brain**: Aggregates results and sends to MiniMax AI for analysis
+4. **Brain**: Aggregates results and sends to Gemini AI for analysis
 5. **Results**: Returns legitimacy score (0-100), red flags, and verdict
 
 ## Demo Mode

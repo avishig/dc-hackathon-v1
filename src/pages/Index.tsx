@@ -5,7 +5,7 @@ import Notepad from "@/components/Notepad";
 import CaseInput from "@/components/CaseInput";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
-import detectiveBg from "@/assets/detective-bg.jpg";
+import cryptoBg from "@/assets/crypto-bg.jpg";
 
 const Index = () => {
   const [subjectName, setSubjectName] = useState("");
@@ -24,7 +24,7 @@ const Index = () => {
     <div 
       className="min-h-screen relative overflow-hidden"
       style={{
-        backgroundImage: `url(${detectiveBg})`,
+        backgroundImage: `url(${cryptoBg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -51,7 +51,7 @@ const Index = () => {
         {/* Notepad with Case Request Form */}
         <div className="transform hover:rotate-0 rotate-[1deg] transition-transform duration-300">
           <form onSubmit={handleSubmit}>
-            <Notepad title="Case Request Form">
+            <Notepad title="Crypto Analysis Request">
               <CaseInput
                 label="Crypto Name"
                 placeholder="Enter crypto name or symbol (e.g., Bitcoin, BTC, Ethereum)..."
@@ -67,14 +67,14 @@ const Index = () => {
                   className="w-full font-typewriter uppercase tracking-wide bg-leather hover:bg-leather/80 text-foreground"
                 >
                   <Search className="w-4 h-4 mr-2" />
-                  {isSubmitting ? "Opening Case..." : "Open Investigation"}
+                  {isSubmitting ? "Analyzing..." : "Analyze Crypto"}
                 </Button>
               </div>
               
               {/* Decorative elements */}
               <div className="mt-8 pt-4 border-t border-dashed border-ink/20">
                 <p className="font-typewriter text-xs text-ink/50 italic">
-                  All investigations are strictly confidential.
+                  All crypto analyses are secure and private.
                 </p>
               </div>
             </Notepad>

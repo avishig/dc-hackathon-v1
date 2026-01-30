@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, X, Scale } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import detectiveBg from "@/assets/detective-bg.jpg";
+import cryptoBg from "@/assets/crypto-bg.jpg";
 
 const Comparison = () => {
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ const Comparison = () => {
       <div 
         className="min-h-screen relative overflow-x-hidden"
         style={{
-          backgroundImage: `url(${detectiveBg})`,
+          backgroundImage: `url(${cryptoBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed',
@@ -126,19 +126,19 @@ const Comparison = () => {
                 <Scale className="w-16 h-16 mx-auto text-primary" />
                 <h1 className="font-typewriter text-3xl text-ink">Comparison Tool</h1>
                 <p className="font-serif text-ink/70">
-                  Select at least 2 investigations to compare side-by-side
+                  Select at least 2 cryptos to compare side-by-side
                 </p>
                 
                 {allInvestigations.length === 0 ? (
                   <div className="mt-8">
                     <p className="font-typewriter text-ink/50 mb-4">
-                      No investigations saved yet. Run some investigations first!
+                      No crypto analyses saved yet. Run some analyses first!
                     </p>
                     <Button
                       onClick={() => navigate("/")}
                       className="font-typewriter"
                     >
-                      Start Investigation
+                      Start Analysis
                     </Button>
                   </div>
                 ) : (
@@ -212,7 +212,7 @@ const Comparison = () => {
     <div 
       className="min-h-screen relative overflow-x-hidden"
       style={{
-        backgroundImage: `url(${detectiveBg})`,
+        backgroundImage: `url(${cryptoBg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -247,7 +247,7 @@ const Comparison = () => {
             <div className="mb-6">
               <div className="paper-texture notepad-shadow rounded-sm p-4">
                 <h2 className="font-typewriter text-xl text-ink mb-2">
-                  Comparing {selectedInvestigations.length} Subjects
+                  Comparing {selectedInvestigations.length} Cryptos
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {selectedInvestigations.map((inv, idx) => (

@@ -43,7 +43,7 @@ const VerdictPanel = ({ subject, legitimacyScore, verdict, summary, shareableId 
   return (
     <div className="bg-secondary/80 backdrop-blur-sm rounded-sm border border-border p-4 min-h-full flex flex-col">
       <h3 className="font-typewriter text-sm uppercase tracking-wider text-primary mb-4 border-b border-primary/30 pb-2">
-        Case Verdict
+        Crypto Analysis
       </h3>
       
       <div className="space-y-6">

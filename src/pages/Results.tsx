@@ -9,7 +9,7 @@ import VerdictPanel from "@/components/VerdictPanel";
 import TitleBanner from "@/components/TitleBanner";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Scale } from "lucide-react";
-import detectiveBg from "@/assets/detective-bg.jpg";
+import cryptoBg from "@/assets/crypto-bg.jpg";
 
 const Results = () => {
   const [searchParams] = useSearchParams();
@@ -77,7 +77,7 @@ const Results = () => {
     <div 
       className="min-h-screen relative overflow-x-hidden"
       style={{
-        backgroundImage: `url(${detectiveBg})`,
+        backgroundImage: `url(${cryptoBg})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
@@ -104,7 +104,7 @@ const Results = () => {
             className="font-typewriter text-foreground hover:text-primary"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            New Case
+            New Analysis
           </Button>
           <div className="animate-flicker">
             <TitleBanner title="Deep Detective" />
@@ -136,7 +136,7 @@ const Results = () => {
             {error ? (
               <div className="h-full flex items-center justify-center">
                 <div className="paper-texture notepad-shadow rounded-sm p-8 text-center">
-                  <p className="font-typewriter text-accent text-lg mb-4">Investigation Failed</p>
+                  <p className="font-typewriter text-accent text-lg mb-4">Analysis Failed</p>
                   <p className="font-serif text-ink/70">{error}</p>
                   <Button
                     onClick={() => navigate("/")}
@@ -149,8 +149,8 @@ const Results = () => {
             ) : isLoading ? (
               <div className="h-full flex items-center justify-center">
                 <div className="paper-texture notepad-shadow rounded-sm p-8 text-center animate-pulse">
-                  <p className="font-typewriter text-ink text-lg">Investigating...</p>
-                  <p className="font-serif text-ink/70 mt-2">Gathering intelligence on "{subject}"</p>
+                  <p className="font-typewriter text-ink text-lg">Analyzing...</p>
+                  <p className="font-serif text-ink/70 mt-2">Scanning crypto data for "{subject}"</p>
                 </div>
               </div>
             ) : result ? (
