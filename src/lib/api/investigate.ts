@@ -9,6 +9,9 @@ interface InvestigateResponse {
 /**
  * Calls the backend API to investigate a subject
  */
+/**
+ * Calls the backend API to investigate a subject
+ */
 export async function investigate(subject: string): Promise<InvestigateResponse> {
   try {
     const response = await fetch('/api/investigate', {
