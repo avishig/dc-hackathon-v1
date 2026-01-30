@@ -34,7 +34,7 @@ const Results = () => {
 
       // Simulate progressive log updates
       const logIntervals = [
-        { delay: 500, log: "[PLAN] Analyzing subject type..." },
+        { delay: 500, log: "[PLAN] Analyzing crypto type..." },
         { delay: 1000, log: "[PLAN] Generating investigation strategy..." },
         { delay: 1500, log: "[EXECUTE] Initiating web scraping agents..." },
         { delay: 2500, log: "[EXECUTE] Searching news archives..." },

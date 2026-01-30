@@ -53,8 +53,8 @@ const Index = () => {
           <form onSubmit={handleSubmit}>
             <Notepad title="Case Request Form">
               <CaseInput
-                label="Subject Name / Company Name"
-                placeholder="Enter name here..."
+                label="Crypto Name"
+                placeholder="Enter crypto name or symbol (e.g., Bitcoin, BTC, Ethereum)..."
                 value={subjectName}
                 onChange={setSubjectName}
               />

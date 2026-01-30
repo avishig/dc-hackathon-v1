@@ -60,9 +60,9 @@ const Comparison = () => {
   };
 
   const getVerdictColor = (verdict: string) => {
-    if (verdict === 'LEGITIMATE') return 'text-green-400';
-    if (verdict === 'SUSPICIOUS') return 'text-yellow-400';
-    if (verdict === 'SCAM') return 'text-accent';
+    if (verdict === 'SAFE') return 'text-green-400';
+    if (verdict === 'SORT OF RISKY') return 'text-yellow-400';
+    if (verdict === 'LIKELY RISKY') return 'text-accent';
     return 'text-muted-foreground';
   };
 

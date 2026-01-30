@@ -153,7 +153,7 @@ const Shared = () => {
               <div className="space-y-4">
                 <div>
                   <p className="font-typewriter text-xs text-muted-foreground uppercase mb-1">
-                    Subject
+                    Crypto
                   </p>
                   <p className="font-serif text-lg text-foreground break-words">
                     {result.subject}

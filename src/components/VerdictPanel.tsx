@@ -28,9 +28,9 @@ const VerdictPanel = ({ subject, legitimacyScore, verdict, summary, shareableId 
   };
 
   const getVerdictColor = () => {
-    if (verdict === 'LEGITIMATE') return 'text-green-400';
-    if (verdict === 'SUSPICIOUS') return 'text-yellow-400';
-    if (verdict === 'SCAM') return 'text-accent';
+    if (verdict === 'SAFE') return 'text-green-400';
+    if (verdict === 'SORT OF RISKY') return 'text-yellow-400';
+    if (verdict === 'LIKELY RISKY') return 'text-accent';
     return 'text-muted-foreground';
   };
 
@@ -47,9 +47,9 @@ const VerdictPanel = ({ subject, legitimacyScore, verdict, summary, shareableId 
       </h3>
       
       <div className="space-y-6">
-        {/* Subject */}
+        {/* Crypto */}
         <div>
-          <p className="font-typewriter text-xs text-muted-foreground uppercase">Subject</p>
+          <p className="font-typewriter text-xs text-muted-foreground uppercase">Crypto</p>
           <p className="font-serif text-lg text-foreground break-words">{subject}</p>
         </div>
 
