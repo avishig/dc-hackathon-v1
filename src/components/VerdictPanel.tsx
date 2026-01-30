@@ -1,11 +1,32 @@
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Scale } from "lucide-react";
+import { toggleComparisonSelection, getInvestigation } from "@/lib/comparison";
+import { useState, useEffect } from "react";
+import ShareInvestigation from "./ShareInvestigation";
+
 interface VerdictPanelProps {
   subject: string;
   legitimacyScore: number;
   verdict: string;
   summary: string;
+  shareableId?: string;
 }
 
-const VerdictPanel = ({ subject, legitimacyScore, verdict, summary }: VerdictPanelProps) => {
+const VerdictPanel = ({ subject, legitimacyScore, verdict, summary, shareableId }: VerdictPanelProps) => {
+  const navigate = useNavigate();
+  const [isSelected, setIsSelected] = useState(false);
+
+  useEffect(() => {
+    const inv = getInvestigation(subject);
+    setIsSelected(inv?.selectedForComparison === true);
+  }, [subject]);
+
+  const handleAddToComparison = () => {
+    toggleComparisonSelection(subject);
+    setIsSelected(!isSelected);
+  };
+
   const getVerdictColor = () => {
     if (verdict === 'LEGITIMATE') return 'text-green-400';
     if (verdict === 'SUSPICIOUS') return 'text-yellow-400';
@@ -20,16 +41,16 @@ const VerdictPanel = ({ subject, legitimacyScore, verdict, summary }: VerdictPan
   };
 
   return (
-    <div className="bg-secondary/80 backdrop-blur-sm rounded-sm border border-border p-4 h-full overflow-hidden flex flex-col">
+    <div className="bg-secondary/80 backdrop-blur-sm rounded-sm border border-border p-4 min-h-full flex flex-col">
       <h3 className="font-typewriter text-sm uppercase tracking-wider text-primary mb-4 border-b border-primary/30 pb-2">
         Case Verdict
       </h3>
       
-      <div className="flex-1 space-y-6">
+      <div className="space-y-6">
         {/* Subject */}
         <div>
           <p className="font-typewriter text-xs text-muted-foreground uppercase">Subject</p>
-          <p className="font-serif text-lg text-foreground">{subject}</p>
+          <p className="font-serif text-lg text-foreground break-words">{subject}</p>
         </div>
 
         {/* Legitimacy Score */}
@@ -53,11 +74,37 @@ const VerdictPanel = ({ subject, legitimacyScore, verdict, summary }: VerdictPan
         </div>
 
         {/* Summary */}
-        <div className="flex-1">
+        <div>
           <p className="font-typewriter text-xs text-muted-foreground uppercase mb-2">Summary</p>
-          <p className="font-serif text-sm text-foreground/80 leading-relaxed">
+          <p className="font-serif text-sm text-foreground/80 leading-relaxed break-words">
             {summary}
           </p>
+        </div>
+
+        {/* Share */}
+        <div className="pt-4 border-t border-border/50">
+          <ShareInvestigation subject={subject} shareableId={shareableId} />
+        </div>
+
+        {/* Comparison Actions */}
+        <div className="pt-4 border-t border-border/50 space-y-2">
+          <Button
+            variant={isSelected ? "default" : "outline"}
+            onClick={handleAddToComparison}
+            className="w-full font-typewriter text-xs"
+            size="sm"
+          >
+            <Scale className="w-3 h-3 mr-2" />
+            {isSelected ? "Remove from Comparison" : "Add to Comparison"}
+          </Button>
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/comparison")}
+            className="w-full font-typewriter text-xs"
+            size="sm"
+          >
+            View Comparison
+          </Button>
         </div>
       </div>
     </div>

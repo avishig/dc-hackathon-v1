@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { investigate } from "@/lib/api/investigate";
 import { InvestigationResult } from "@/types/investigation";
+import { saveInvestigation, toggleComparisonSelection, getInvestigation } from "@/lib/comparison";
 import AgentLog from "@/components/AgentLog";
 import ManilaFolder from "@/components/ManilaFolder";
 import VerdictPanel from "@/components/VerdictPanel";
 import TitleBanner from "@/components/TitleBanner";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Scale } from "lucide-react";
 import detectiveBg from "@/assets/detective-bg.jpg";
 
 const Results = () => {
@@ -58,6 +59,8 @@ const Results = () => {
         if (response.data) {
           setResult(response.data);
           setCurrentLogs(response.data.agentLog);
+          // Save investigation for comparison
+          saveInvestigation(response.data);
         }
       } catch (err) {
         console.error("Investigation error:", err);
@@ -72,7 +75,7 @@ const Results = () => {
 
   return (
     <div 
-      className="min-h-screen relative overflow-hidden"
+      className="min-h-screen relative overflow-x-hidden"
       style={{
         backgroundImage: `url(${detectiveBg})`,
         backgroundSize: 'cover',
@@ -94,7 +97,7 @@ const Results = () => {
       {/* Content */}
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* Header */}
-        <header className="p-4 flex items-center justify-between">
+        <header className="flex-shrink-0 p-4 flex items-center justify-between">
           <Button
             variant="ghost"
             onClick={() => navigate("/")}
@@ -106,18 +109,30 @@ const Results = () => {
           <div className="animate-flicker">
             <TitleBanner title="Deep Detective" />
           </div>
-          <div className="w-24" /> {/* Spacer */}
+          <div className="flex items-center gap-2">
+            {result && (
+              <Button
+                variant="outline"
+                onClick={() => navigate("/comparison")}
+                className="font-typewriter text-foreground hover:text-primary"
+              >
+                <Scale className="w-4 h-4 mr-2" />
+                Compare
+              </Button>
+            )}
+            <div className="w-16" /> {/* Spacer */}
+          </div>
         </header>
 
         {/* Main content */}
-        <main className="flex-1 p-4 grid grid-cols-1 lg:grid-cols-4 gap-4 min-h-0">
+        <main className="flex-1 p-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
           {/* Agent Log - Left panel */}
-          <div className="lg:col-span-1 h-[300px] lg:h-auto">
+          <div className="lg:col-span-1 min-h-[300px]">
             <AgentLog logs={currentLogs} isLoading={isLoading} />
           </div>
 
           {/* Manila Folder - Center */}
-          <div className="lg:col-span-2 h-[500px] lg:h-auto">
+          <div className="lg:col-span-2 min-h-[500px]">
             {error ? (
               <div className="h-full flex items-center justify-center">
                 <div className="paper-texture notepad-shadow rounded-sm p-8 text-center">
@@ -139,18 +154,29 @@ const Results = () => {
                 </div>
               </div>
             ) : result ? (
-              <ManilaFolder findings={result.findings} />
+              <ManilaFolder 
+                findings={result.findings} 
+                subject={result.subject}
+                onUpdate={() => {
+                  // Refresh investigation data if needed
+                  const updated = getInvestigation(result.subject);
+                  if (updated) {
+                    setResult(updated);
+                  }
+                }}
+              />
             ) : null}
           </div>
 
           {/* Verdict Panel - Right */}
-          <div className="lg:col-span-1 h-[400px] lg:h-auto">
+          <div className="lg:col-span-1 min-h-[400px]">
             {result ? (
               <VerdictPanel
                 subject={result.subject}
                 legitimacyScore={result.legitimacyScore}
                 verdict={result.verdict}
                 summary={result.summary}
+                shareableId={result.shareableId}
               />
             ) : (
               <div className="bg-secondary/80 backdrop-blur-sm rounded-sm border border-border p-4 h-full flex items-center justify-center">

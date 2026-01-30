@@ -1,20 +1,23 @@
 import { useState } from "react";
 import { Finding } from "@/types/investigation";
+import FindingComments from "./FindingComments";
 
 interface ManilaFolderProps {
   findings: Finding[];
+  subject?: string;
+  onUpdate?: () => void;
 }
 
-const ManilaFolder = ({ findings }: ManilaFolderProps) => {
+const ManilaFolder = ({ findings, subject, onUpdate }: ManilaFolderProps) => {
   const [activeTab, setActiveTab] = useState(0);
 
   const getCategoryIcon = (category: Finding['category']) => {
     switch (category) {
-      case 'news': return '📰';
-      case 'legal': return '⚖️';
-      case 'social': return '👥';
-      case 'financial': return '💰';
-      default: return '📄';
+      case 'news': return '';
+      case 'legal': return '';
+      case 'social': return '';
+      case 'financial': return '';
+      default: return '';
     }
   };
 
@@ -51,24 +54,25 @@ const ManilaFolder = ({ findings }: ManilaFolderProps) => {
         
         {/* Folder tab */}
         <div 
-          className="absolute -top-6 left-8 px-6 py-2 rounded-t-md font-typewriter text-sm uppercase tracking-wide"
+          className="absolute top-0 left-8 px-6 py-2 rounded-t-md font-typewriter text-sm uppercase tracking-wide"
           style={{
             background: 'linear-gradient(180deg, hsl(35 50% 70%) 0%, hsl(35 50% 65%) 100%)',
             color: 'hsl(30 30% 20%)',
+            transform: 'translateY(-100%)',
           }}
         >
           Case Files
         </div>
 
         {/* Paper tabs - stacked */}
-        <div className="absolute top-4 right-4 flex gap-1">
+        <div className="absolute top-4 right-4 flex gap-1 flex-wrap max-w-[calc(100%-2rem)] justify-end">
           {findings.map((finding, index) => (
             <button
               key={finding.id}
               onClick={() => setActiveTab(index)}
               className={`
                 px-3 py-1.5 font-typewriter text-xs uppercase tracking-wide
-                transition-all duration-200 rounded-t-sm
+                transition-all duration-200 rounded-t-sm flex-shrink-0
                 ${index === activeTab 
                   ? 'bg-paper text-ink -translate-y-1 shadow-lg z-10' 
                   : 'bg-paper/80 text-ink/60 hover:bg-paper hover:-translate-y-0.5'
@@ -77,26 +81,25 @@ const ManilaFolder = ({ findings }: ManilaFolderProps) => {
               `}
               style={{ transform: index === activeTab ? 'translateY(-4px)' : undefined }}
             >
-              {getCategoryIcon(finding.category)} {index + 1}
+              {index + 1}
             </button>
           ))}
         </div>
 
         {/* Active paper content */}
-        <div className="absolute inset-0 top-12 p-6 overflow-hidden">
+        <div className="absolute inset-0 top-12 p-6">
           {/* Paper stack effect */}
           <div className="absolute inset-4 bg-paper/90 rounded-sm transform rotate-1" />
           <div className="absolute inset-4 bg-paper/95 rounded-sm transform -rotate-0.5" />
           
           {/* Active paper */}
-          <div className="relative h-full paper-texture rounded-sm p-6 overflow-y-auto notepad-shadow">
+          <div className="relative h-full paper-texture rounded-sm p-6 notepad-shadow overflow-y-auto">
             {/* Red margin line */}
             <div className="absolute left-8 top-0 bottom-0 w-[2px] bg-accent/30" />
             
-            <div className="pl-6 space-y-4">
+            <div className="pl-6 space-y-4 pb-4">
               {/* Source badge */}
               <div className="flex items-center gap-2">
-                <span className="text-2xl">{getCategoryIcon(findings[activeTab].category)}</span>
                 <span className="font-typewriter text-xs uppercase bg-ink/10 px-2 py-1 rounded text-ink">
                   {findings[activeTab].source}
                 </span>
@@ -129,6 +132,15 @@ const ManilaFolder = ({ findings }: ManilaFolderProps) => {
                   {findings[activeTab].url}
                 </a>
               </div>
+
+              {/* Comments */}
+              {subject && (
+                <FindingComments
+                  subject={subject}
+                  finding={findings[activeTab]}
+                  onUpdate={onUpdate}
+                />
+              )}
 
               {/* Navigation hint */}
               <div className="pt-6 text-center">

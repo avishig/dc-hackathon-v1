@@ -1,3 +1,12 @@
+export interface Comment {
+  id: string;
+  findingId: string;
+  text: string;
+  author: string;
+  timestamp: string;
+  replies?: Comment[];
+}
+
 export interface Finding {
   id: string;
   title: string;
@@ -6,6 +15,7 @@ export interface Finding {
   snippet: string;
   category: 'news' | 'legal' | 'social' | 'financial' | 'general';
   date?: string;
+  comments?: Comment[];
 }
 
 export interface InvestigationResult {
@@ -15,4 +25,7 @@ export interface InvestigationResult {
   legitimacyScore: number;
   verdict: string;
   agentLog: string[];
+  selectedForComparison?: boolean;
+  shareableId?: string;
+  createdAt?: string;
 }
