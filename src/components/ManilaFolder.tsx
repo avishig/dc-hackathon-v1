@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Finding } from "@/types/investigation";
 import FindingComments from "./FindingComments";
+import { Search } from "lucide-react";
 
 interface ManilaFolderProps {
   findings: Finding[];
@@ -73,6 +74,7 @@ const ManilaFolder = ({ findings, subject, onUpdate }: ManilaFolderProps) => {
               className={`
                 px-3 py-1.5 font-typewriter text-xs uppercase tracking-wide
                 transition-all duration-200 rounded-t-sm flex-shrink-0
+                flex items-center gap-1.5
                 ${index === activeTab 
                   ? 'bg-paper text-ink -translate-y-1 shadow-lg z-10' 
                   : 'bg-paper/80 text-ink/60 hover:bg-paper hover:-translate-y-0.5'
@@ -81,6 +83,7 @@ const ManilaFolder = ({ findings, subject, onUpdate }: ManilaFolderProps) => {
               `}
               style={{ transform: index === activeTab ? 'translateY(-4px)' : undefined }}
             >
+              <Search className="w-3 h-3" />
               {index + 1}
             </button>
           ))}
